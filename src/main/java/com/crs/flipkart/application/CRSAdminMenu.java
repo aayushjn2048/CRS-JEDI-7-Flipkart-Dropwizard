@@ -26,6 +26,7 @@ import com.crs.flipkart.constants.Designation;
 import com.crs.flipkart.constants.Gender;
 import com.crs.flipkart.constants.Role;
 import com.crs.flipkart.dao.AdminDaoOperation;
+import com.crs.flipkart.exceptions.CourseAlreadyExists;
 import com.crs.flipkart.exceptions.CourseNotDeletedException;
 import com.crs.flipkart.exceptions.CourseNotFoundException;
 import com.crs.flipkart.exceptions.GradeCardNotPublishedException;
@@ -85,7 +86,12 @@ public class CRSAdminMenu {
 							System.out.print("Enter CatalogId");
 							newCourse.setCatalogId(scanner.nextInt());
 		
-							courseImplementation.addCourse(newCourse);
+							try {
+								courseImplementation.addCourse(newCourse);
+							} catch (CourseAlreadyExists e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
 							break;
 						}
 				case 2: {

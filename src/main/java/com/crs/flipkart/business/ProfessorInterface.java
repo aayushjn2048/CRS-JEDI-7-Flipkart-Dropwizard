@@ -6,37 +6,25 @@ package com.crs.flipkart.business;
 import java.util.ArrayList;
 
 import com.crs.flipkart.bean.Course;
+import com.crs.flipkart.bean.Professor;
+import com.crs.flipkart.bean.Student;
+import com.crs.flipkart.exceptions.CourseNotFoundException;
 
 /**
  * @author HP
- * Interface for ProfessorImplementation
- * 
+ *
  */
 public interface ProfessorInterface {
 	
-	/**
-	 * Method to view all courses
-	 */
-	public ArrayList<Course> viewAvailableCourses();
+	public  ArrayList<Professor> viewProfessorData();
+	public  void addProfessordata(Professor professor);
+	public  boolean removeProfessordata(int professorId);
+	public  void updateProfessordata(Professor professor);
+	public ArrayList<Course> viewAvailableCourses() throws CourseNotFoundException;
 	
-	/**
-	 * Method to view list of enrolled Students
-	 */
-	public void viewEnrolledStudents();
+	public ArrayList<Student> viewEnrolledStudents(int professorid, int courseid);
 	
-	/**
-	 * Method to get Courses by Professor Id
-	 * @param professorId the id of professor
-	 * @param courseId the id of course
-	 * @return boolean data whether offered to the professor or not.
-	 */
-	public boolean selectCourse(int professorId, int courseId) ;
+	public void selectCourse(int professorId, int courseId) throws CourseNotFoundException ;
 	
-	/**
-	 * Assign grades to student
-	 * @param studentId the student id
-	 * @param courseId the course id
-     * @param grade the grade to be assigned
-	 */
-	public void assignGrade(int studentId, int courseId, int semesterNumber);
+	public void assignGrade(int studentId, int courseId, float grade) throws CourseNotFoundException;
 }

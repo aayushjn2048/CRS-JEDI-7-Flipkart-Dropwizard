@@ -12,6 +12,7 @@ import com.crs.flipkart.business.StudentImplementation;
 import com.crs.flipkart.business.UserImplementation;
 import com.crs.flipkart.constants.Gender;
 import com.crs.flipkart.constants.Role;
+import com.crs.flipkart.exceptions.PasswordIsWeakException;
 
 /**
  * @author HP
@@ -61,7 +62,12 @@ public class StudentSelfRegistration {
 			user.setGender(gender);
 			user.setRole(Role.STUDENT);
 			UserImplementation userImplementation = new UserImplementation();
-			userImplementation.addUserdata(user);
+			try {
+				userImplementation.addUserdata(user);
+			} catch (PasswordIsWeakException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			System.out.println("Student is registerd succesfully");
 		}
 		else {

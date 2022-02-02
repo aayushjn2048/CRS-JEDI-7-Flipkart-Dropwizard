@@ -5,8 +5,10 @@ package com.crs.flipkart.business;
 
 import java.util.ArrayList;
 
+import com.crs.flipkart.bean.GradeCard;
 import com.crs.flipkart.bean.Student;
 import com.crs.flipkart.bean.StudentCourseChoice;
+import com.crs.flipkart.exceptions.CourseNotFoundException;
 import com.crs.flipkart.exceptions.GradeCardNotPublishedException;
 
 /**
@@ -34,8 +36,9 @@ public interface StudentInterface {
 		 * Method for Selecting Courses
 		 * @param StudentId
 		 * @return StudentCourseChoice object
+	 * @throws CourseNotFoundException 
 		 */
-	 public StudentCourseChoice selectCourses(int studentId);
+	 public StudentCourseChoice selectCourses(int studentId,ArrayList<Integer> id) throws CourseNotFoundException;
 	 
 	 /**
 		 * Method to display course catalog
@@ -45,9 +48,10 @@ public interface StudentInterface {
 	 /**
 		 * Method to display grade card
 		 * @param StudentId
+	 * @return 
 		 * @throws GradeCardNotPublishedException
 	*/
-	 public void displayGradeCard(int studentId) throws GradeCardNotPublishedException;
+	 public GradeCard displayGradeCard(int studentId) throws GradeCardNotPublishedException;
 	 
 	 /**
 		 * Method for checking student registered or not

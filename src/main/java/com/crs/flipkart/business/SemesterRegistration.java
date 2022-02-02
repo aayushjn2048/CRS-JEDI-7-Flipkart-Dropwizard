@@ -6,6 +6,7 @@ package com.crs.flipkart.business;
 import java.util.ArrayList;
 
 import com.crs.flipkart.bean.Course;
+import com.crs.flipkart.exceptions.CourseAlreadyExists;
 import com.crs.flipkart.exceptions.CourseNotDeletedException;
 import com.crs.flipkart.exceptions.CourseNotFoundException;
 import com.crs.flipkart.validator.StandardResponse;
@@ -27,8 +28,9 @@ public interface SemesterRegistration {
 	 * Method for Adding the course
 	 * @param course object
 	 * @return StandardResponse object
+	 * @throws CourseAlreadyExists 
 	 */
-	public StandardResponse addCourse(Course course); 
+	public StandardResponse addCourse(Course course) throws CourseAlreadyExists; 
 	
 	/**
 	 * Method for Removing the course

@@ -17,6 +17,7 @@ import com.crs.flipkart.bean.Student;
 import com.crs.flipkart.bean.StudentCourseChoice;
 import com.crs.flipkart.bean.StudentRegisteredCourses;
 import com.crs.flipkart.dao.StudentDaoOperation;
+import com.crs.flipkart.exceptions.CourseNotFoundException;
 import com.crs.flipkart.exceptions.GradeCardNotPublishedException;
 import com.crs.flipkart.dao.AdminDaoInterface;
 import com.crs.flipkart.dao.AdminDaoOperation;
@@ -108,7 +109,7 @@ public class StudentImplementation implements StudentInterface{
 	 * @throws GradeCardNotPublishedException
 	 */
 	@Override
-	public void displayGradeCard(int studentId) throws GradeCardNotPublishedException {
+	public GradeCard displayGradeCard(int studentId) throws GradeCardNotPublishedException {
 		// TODO Auto-generated method stub
 		
 		StudentRegisteredCourses studentRegisteredCourses = courseDaoImplementation.getStudentRegisteredCourses(studentId);
@@ -121,6 +122,8 @@ public class StudentImplementation implements StudentInterface{
 		
 		if(gradeCard.isPublished())
 		{
+			return gradeCard;
+			/*
 			System.out.println("\n===================GRADE CARD===================\n");
 			System.out.println("  Student Id: "+ gradeCard.getStudentId());
 			System.out.println("\n  Serial No\tCourse Name\tGrade");
@@ -130,6 +133,7 @@ public class StudentImplementation implements StudentInterface{
 			System.out.println("  4\t\t"+ courseDaoImplementation.getCourseFromCourseId(studentRegisteredCourses.getCourseId4()).getName() +"\t\t" + grade4);
 			System.out.printf("\n  SGPA: %.2f", gradeCard.getSgpa());
 			System.out.println("\n=================================================\n");
+			*/
 		}
 		else
 		{
@@ -144,23 +148,24 @@ public class StudentImplementation implements StudentInterface{
 	 * @return StudentCourseChoice object
 	 */
 	@Override
-	public StudentCourseChoice selectCourses(int studentId) {
+	public StudentCourseChoice selectCourses(int studentId,ArrayList<Integer> id) throws CourseNotFoundException {	//we'll receive the list of course id's a student chooses
 		// TODO Auto-generated method stub
-		System.out.println("Following courses are available");
-		displayCourseCatalog();
+//		System.out.println("Following courses are available");
+//		displayCourseCatalog();
 		
-		System.out.println("Please select your courses (4 Primary + 2 Alternate):");
-		Scanner sc = new Scanner(System.in);
+//		System.out.println("Please select your courses (4 Primary + 2 Alternate):");
+//		Scanner sc = new Scanner(System.in);
 		ArrayList<Course> selectedCourses = new ArrayList<Course>();
 		ArrayList<Course> courseCatalog = courseImplementation.getAllCourses();
 		Map<Integer,Course> courseList = new HashMap<>();
 		for(Course c: courseCatalog)
 			courseList.put(c.getCourseId(), c);
-		for(int i=1; i<=6; )
+		for(int i=0; i<6; )
 		{
-			System.out.print("Enter course(courseId) choice-"+i+": ");
-			int courseId = sc.nextInt();
+			//System.out.print("Enter course(courseId) choice-"+i+": ");
+			//int courseId = sc.nextInt();
 			
+			int courseId = id.get(i);
 			Course course = null;
 			if(courseList.containsKey(courseId))
 				course = courseList.get(courseId);
@@ -171,7 +176,7 @@ public class StudentImplementation implements StudentInterface{
 			}
 			else
 			{
-				System.out.println("Course not found!!");
+				throw new CourseNotFoundException(courseId);
 			}
 			
 		}
@@ -182,13 +187,13 @@ public class StudentImplementation implements StudentInterface{
 		studentDaoImplementation.storeStudentCourseChoice(studentCourseChoice);
 		
 		System.out.println("Registration form submitted!!");
-		Notification notification = new Notification();
-		notification.setUserId(CRSApplication.getUserId());
-		notification.setMessage("Your application form has been submitted for the further process.");
-		Date date = new Date();
-		notification.setDateTime(date);
-		AdminDaoInterface adminDao = new AdminDaoOperation();
-		adminDao.generateNotification(notification);
+//		Notification notification = new Notification();
+//		notification.setUserId(CRSApplication.getUserId());
+//		notification.setMessage("Your application form has been submitted for the further process.");
+//		Date date = new Date();
+//		notification.setDateTime(date);
+//		AdminDaoInterface adminDao = new AdminDaoOperation();
+//		adminDao.generateNotification(notification);
 		return studentCourseChoice;
 	}
 

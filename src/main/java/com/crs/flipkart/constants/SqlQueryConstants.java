@@ -23,7 +23,9 @@ public class SqlQueryConstants {
     public static final String AVAILABLE_COURSE_QUERY = "SELECT * FROM course WHERE professorId IS NULL";	
 	public static final String ASSIGN_GRADES_QUERY = "INSERT INTO gradeCard(studentId,courseId,grade) values(?,?,?)";
 	public static final String SELECT_COURSES_QUERY = "SELECT * FROM course Where courseId = ? AND professorId IS NULL";
-	public static final String SELECT_COURSES_QUERY1 = "UPDATE course SET professorId = ? WHERE courseId = ?";
+	public static final String SELECT_COURSES_QUERY1 = "UPDATE course "
+            + "SET professorId = ? "
+            + "WHERE courseId = ?";
 	public static final String 	VIEW_ENROLLED_STUDENTS_QUERY = "SELECT * FROM course WHERE professorId = professorid";
 	public static final String 	VIEW_ENROLLED_STUDENTS_QUERY1 = "SELECT * FROM studentRegisteredDetails";
 	public static final String 	VIEW_ENROLLED_STUDENTS_QUERY2 = "SELECT * FROM student where studentId = ? ";

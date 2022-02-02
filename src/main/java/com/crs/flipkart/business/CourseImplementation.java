@@ -12,6 +12,7 @@ import com.crs.flipkart.dao.CourseDaoImplementation;
 import com.crs.flipkart.dao.CourseDaoInterface;
 import com.crs.flipkart.dao.StudentDaoInterface;
 import com.crs.flipkart.dao.StudentDaoOperation;
+import com.crs.flipkart.exceptions.CourseAlreadyExists;
 import com.crs.flipkart.exceptions.CourseNotDeletedException;
 import com.crs.flipkart.exceptions.CourseNotFoundException;
 import com.crs.flipkart.exceptions.DatabaseException;
@@ -43,18 +44,18 @@ public class CourseImplementation implements CourseInterface{
 		try {
 			if(admin.deleteCourse(courseId))
 			{
-				System.out.println("Course details deleted from the database");
+				return;
 			}
 			else
 			{
-				throw new CourseNotFoundException();
+				throw new CourseNotDeletedException(courseId);
 			}
-		} catch (DatabaseException | CourseNotFoundException e) {
+		} catch (DatabaseException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return;
 		}
 	}
-	public void addCourse(Course course)
+	public void addCourse(Course course) throws CourseAlreadyExists
 	{
 		AdminDaoInterface admin = new AdminDaoOperation();
 		Boolean ans = null;
@@ -65,21 +66,21 @@ public class CourseImplementation implements CourseInterface{
 			e.printStackTrace();
 		}
 		if(ans)
-			System.out.println("Course added successfully!!!");
+			return;
 		else
-			System.out.println("Error while executing operation");
+			throw new CourseAlreadyExists();
 	}
 	public void updateCourse(Course course) throws CourseNotFoundException{
 
 		AdminDaoInterface admin = new AdminDaoOperation();
 		try {
 			if(admin.updateCourse(course))	//we need to change in the menu so that users can only add the details they can update
-				System.out.println("Course updated successfully!!!");
+				return;
 			else
 			{
-				throw new CourseNotFoundException();
+				throw new CourseNotFoundException(course.getCourseId());
 			}
-		} catch (DatabaseException | CourseNotFoundException e) {
+		} catch (DatabaseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -97,7 +98,7 @@ public class CourseImplementation implements CourseInterface{
 		ArrayList<Course> courseList = getAllCourses();
 		if(courseList.size()==0)
 		{
-			throw new CourseNotFoundException();
+			throw new CourseNotFoundException(courseId);
 		}
 		else
 		{

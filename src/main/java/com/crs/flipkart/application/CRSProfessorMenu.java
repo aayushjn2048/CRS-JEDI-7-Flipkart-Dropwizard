@@ -45,22 +45,19 @@ public class CRSProfessorMenu {
 					break;
 				}
 				case 2: {
-					//professorImplementation.viewEnrolledStudents(professorId);
+					System.out.println("Enetr your course Choice");
+					int courseId=scanner.nextInt();
+					professorImplementation.viewEnrolledStudents(professorId, courseId);
 					break;
 				}
 				case 3:{
-					while(true) {
+					
 						System.out.print("Please enter your choice of selection: ");
 						int courseId=scanner.nextInt();
-						if(professorImplementation.selectCourse(professorId,courseId)) {
-							System.out.println("Succesfully allocated");
-							break;
-						}
-						else {
-							System.out.println("Course is already taken");
-						}
-					}
-					break;
+						professorImplementation.selectCourse(professorId,courseId);
+							
+
+				break;
 				}
 				case 4:{
 					System.out.print("Enter StudentId: ");

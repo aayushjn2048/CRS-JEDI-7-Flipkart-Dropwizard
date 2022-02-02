@@ -9,13 +9,24 @@ package com.crs.flipkart.exceptions;
 public class CourseNotDeletedException extends Exception{
     private int courseCode;
 
-    /**
-     * constructor for the exception class
-     * @param courseCode --> this is the ID of the course which is cannot be removed
-     */
-    public CourseNotDeletedException () {
-       System.out.println("Course is not deleted");
-    }
-    
-    
+private int courseId;
+	
+	public CourseNotDeletedException(int courseId)
+	{
+		setCourseId(courseId);
+	}
+	
+	@Override
+	public String getMessage() {
+		return "The course you are trying to remove does not exist. CourseId :"+String.valueOf(courseId);
+	}
+
+	public int getCourseId() {
+		return courseId;
+	}
+
+	public void setCourseId(int courseId) {
+		this.courseId = courseId;
+	}
+	
 }

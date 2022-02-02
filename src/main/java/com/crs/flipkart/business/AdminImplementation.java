@@ -53,7 +53,6 @@ public class AdminImplementation implements AdminInterface{
 	
 	
 	
-	
 	private PaymentsDaoInterface paymentsDaoImplementation = PaymentsDaoImplementation.getInstance();
 	//Group 1
 	public void activateGradeCard() throws GradeCardNotPublishedException{

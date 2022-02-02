@@ -7,6 +7,7 @@ import java.util.Scanner;
 
 import com.crs.flipkart.dao.StudentDaoInterface;
 import com.crs.flipkart.dao.StudentDaoOperation;
+import com.crs.flipkart.exceptions.UserNotFoundException;
 
 /**
  * @author HP
@@ -28,12 +29,17 @@ public class PasswordUpdaterImplementation implements PasswordUpdaterInterface {
         String newPassword = scanner.next();
 
         StudentDaoInterface updaterDao = new StudentDaoOperation();
-
-        if(updaterDao.update(username,oldPassword,newPassword)){
-            System.out.println("Password Updated Successfully !!");
-        }
-        else{
-            System.out.println("Try again !");
-        }
+/*
+        try {
+			if(updaterDao.update(username,oldPassword,newPassword)){
+			    System.out.println("Password Updated Successfully !!");
+			}
+			else{
+			    System.out.println("Try again !");
+			}
+		} catch (UserNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/
     }
 }

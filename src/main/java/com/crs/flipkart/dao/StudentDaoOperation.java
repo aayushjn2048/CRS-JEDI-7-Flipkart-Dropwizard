@@ -17,6 +17,7 @@ import com.crs.flipkart.bean.Student;
 import com.crs.flipkart.bean.StudentCourseChoice;
 import com.crs.flipkart.constants.Gender;
 import com.crs.flipkart.constants.SqlQueryConstants;
+import com.crs.flipkart.exceptions.UserNotFoundException;
 
 /*
 * Class to implement Student Dao Operations
@@ -27,8 +28,6 @@ public class StudentDaoOperation implements StudentDaoInterface {
     private static StudentDaoOperation instance = null;
     private Connection conn = DBConnection.connectDB();
     private static Logger logger = Logger.getLogger(StudentDaoOperation.class);
-
-    private void StudentImplementation(){}
 
     public static StudentDaoOperation getInstance(){
         if(instance==null){
@@ -279,6 +278,7 @@ public class StudentDaoOperation implements StudentDaoInterface {
 			while (rs.next()) {
 				String s = rs.getString("paymentStatus");
 				result = s;
+				logger.info(s);
 				break;
 			}
 		} catch (SQLException se) {
@@ -300,62 +300,82 @@ public class StudentDaoOperation implements StudentDaoInterface {
 	 * @param oldPassword the old password of user
 	 * @param newPassword the new password of user
 	 * */
-	public Boolean update(String username,String oldPassword,String newPassword) {
+	public void update(String username,String oldPassword,String newPassword) throws UserNotFoundException{
         PreparedStatement stmt = null;
 
-        try {
+        
 
             {
                 String sql = "SELECT * FROM user WHERE username = ?";
-                stmt = conn.prepareStatement(sql);
-                stmt.setString(1, username);
-                ResultSet rs = stmt.executeQuery();
+      
+               
                 boolean ok = false;
-                while (rs.next()) {
-                    ok = true;
-                    //System.out.println("Username exists");
+                try {
+                	stmt = conn.prepareStatement(sql);
+                    stmt.setString(1, username);
+	                ResultSet rs = stmt.executeQuery();
+	            
+            
+					while (rs.next()) {
+	                    ok = true;
+	                    //System.out.println("Username exists");
+	                    break;
+	                }
                 }
+            	catch (Exception e) {
+	                // Handle errors for Class.forName
+	            	logger.error("Exception raised" + e.getMessage());
+	            }
                 if(!ok){
                     //System.out.println("Username Doesn't exist !");
-                    return false;
+                    throw new UserNotFoundException("Username doesn't exist!!!");
                 }
             }
 
             {
                 String sql = "SELECT password FROM user WHERE username = ?";
-                stmt = conn.prepareStatement(sql);
-                stmt.setString(1, username);
-                ResultSet rs = stmt.executeQuery();
-                while (rs.next()) {
-                    String s = rs.getString("password");
-                    if (!s.equals(oldPassword)) {
-                        System.out.println("Wrong original Password");
-                        return false;
+                ResultSet rs = null;
+                String s = null;
+                try
+                {
+                PreparedStatement stmt1 = conn.prepareStatement(sql);
+                stmt1.setString(1, username);
+          
+                
+                	rs = stmt1.executeQuery();
+                	while (rs.next()) {
+                        s = rs.getString("password");
+                        break;
                     }
+                }
+            catch (Exception e) {
+                // Handle errors for Class.forName
+            	logger.error("Exception raised" + e.getMessage());
+            }
+   
+                if (!s.equals(oldPassword)) {
+                    throw new UserNotFoundException("Wrong password!!!");
                 }
             }
 
             {
                 String sql = "UPDATE user SET password = ? WHERE username = ?";
+                try
+                {
                 stmt = conn.prepareStatement(sql);
                 stmt.setString(1, newPassword);
                 stmt.setString(2, username);
-                int sz = stmt.executeUpdate();
-            }
-            return true;
 
-        } catch (SQLException se) {
-            // Handle errors for JDBC
-        	logger.error("Exception raised" + se.getMessage());
-        } catch (Exception e) {
-            // Handle errors for Class.forName
-        	logger.error("Exception raised" + e.getMessage());
-        } finally {
-            // finally block used to close resources // nothing we can do//end finally try
+                	int sz = stmt.executeUpdate();
+                }
+                catch (Exception e) {
+                    // Handle errors for Class.forName
+                	logger.error("Exception raised" + e.getMessage());
+                }
+            }
+
         }
 
-        return true;
-    }
 
 	@Override
 	public Boolean isStudentRegistered(int studentId) {

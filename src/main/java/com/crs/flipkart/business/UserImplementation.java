@@ -13,6 +13,7 @@ import com.crs.flipkart.dao.AdminDaoInterface;
 import com.crs.flipkart.dao.AdminDaoOperation;
 import com.crs.flipkart.dao.UserDaoInterface;
 import com.crs.flipkart.dao.UserDaoOperation;
+import com.crs.flipkart.exceptions.PasswordIsWeakException;
 
 /**
  * @author HP
@@ -26,10 +27,12 @@ public class UserImplementation implements UserInterface {
 	 * @param user contains the student details
 	 */
 	@Override
-	public void addUserdata(Student user) {
+	public void addUserdata(Student user) throws PasswordIsWeakException{
 		// TODO Auto-generated method stub
 		
 		UserDaoInterface userDaoOperation = new UserDaoOperation();
+		if(user.getPasswordHash().length()<4)
+			throw new PasswordIsWeakException();
 		if(userDaoOperation.addUsertData(user))
 		{
 			Notification notification = new Notification();

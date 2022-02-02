@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import com.crs.flipkart.bean.Course;
 import com.crs.flipkart.bean.Student;
 import com.crs.flipkart.bean.StudentCourseChoice;
+import com.crs.flipkart.exceptions.UserNotFoundException;
 
 /**
  * @author HP
@@ -79,8 +80,9 @@ public interface StudentDaoInterface {
 	 * @param username the username of user
 	 * @param oldPassword the old password of user
 	 * @param newPassword the new password of user
+     * @throws UserNotFoundException 
 	 * */
-    public Boolean update(String username,String oldPassword,String newPassword);
+    public void update(String username,String oldPassword,String newPassword) throws UserNotFoundException;
     
     /**
 	 * Method to check student Registered or not

@@ -24,7 +24,7 @@ import com.crs.flipkart.utils.DBUtils;
 public class AuthorizeDaoOperation implements AuthorizeDaoInterface{
 
 	private static Logger logger = Logger.getLogger(AuthorizeDaoOperation.class);
-	private Connection conn = DBUtils.getConnection();
+	private Connection conn = DBConnection.connectDB();
 	
 	/**
 	 * Method for authorizeUser
@@ -41,8 +41,6 @@ public class AuthorizeDaoOperation implements AuthorizeDaoInterface{
 			stmt.setString(2, password);
 			 ResultSet rs = stmt.executeQuery();
 			 while(rs.next()){
-				 	CRSApplication.setUserId(rs.getInt("userId"));
-				 	CRSApplication.setUserName(rs.getString("username"));
 		            return Role.stringToName(rs.getString("roleName"));
 			 }
 			}

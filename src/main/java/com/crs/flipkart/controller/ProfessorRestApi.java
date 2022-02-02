@@ -15,19 +15,17 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+
+import org.apache.log4j.Logger;
 
 import com.crs.flipkart.bean.Course;
-import com.crs.flipkart.bean.Grade;
 import com.crs.flipkart.bean.Student;
 import com.crs.flipkart.business.ProfessorImplementation;
 import com.crs.flipkart.business.ProfessorInterface;
+import com.crs.flipkart.dao.ProfessorDaoOperation;
 import com.crs.flipkart.exceptions.CourseNotFoundException;
 import com.crs.flipkart.exceptions.UserNotFoundException;
-
-/**
- * @author HP
- *
- */
 
 /**
  * @author DELL
@@ -37,103 +35,149 @@ import com.crs.flipkart.exceptions.UserNotFoundException;
 /**
  * Rest API class for professor 
  */
+
 @Path("/ProfessorApi")
 public class ProfessorRestApi {
 	
-	ProfessorImplementation professorImplementation = ProfessorImplementation.getInstance();
 	
-	
+	private static Logger logger = Logger.getLogger(ProfessorDaoOperation.class);
 	/**
-	 * View all All available Courses
-	 */
+     * Method to View all All available Courses
+     * @return list of all available courses
+     * @throws SQLException, CourseNotFoundException ,ValidationException 
+     */
 	@GET
-	@Path("/availableCourses")
+	@Path("/viewCourse")
 	@Produces(MediaType.APPLICATION_JSON)
-	public ArrayList<Course> viewAvailableCourses() {
+	public ArrayList<Course>viewAvailableCourses() throws ValidationException, CourseNotFoundException  {
+		logger.info("Viewing Available Courses");
 		ArrayList<Course> courses=new ArrayList<Course>();
+		ProfessorInterface professorInterface = ProfessorImplementation.getInstance();
 		try {
 		
-		courses=professorImplementation.viewAvailableCourses();
+		courses=professorInterface.viewAvailableCourses();
+		}
+		catch(CourseNotFoundException ex) {
+			return null;
 		}
 		catch(Exception e){
 			return null;
 		}
+		
 		return courses;
 	}
 	
 	/**
-	 * View all students registered in a given course
-	 */
+     * Method to View all students registered in a given course
+     * @param profId
+	 *@param courseId
+     * @return list of students registered
+     * @throws SQLException , UserNotFoundException
+     */
 	@GET
-	@Path("/enrolledStudents")
+	@Path("/viewEnrolledStudent")
 	@Produces(MediaType.APPLICATION_JSON)
-	public ArrayList<ArrayList> viewEnrolledStudents(@NotNull
+	public ArrayList<Student> viewEnrolledStudents(@NotNull
 			@QueryParam("profId") int profId, 
 			@NotNull 
-			@QueryParam("courseId") int courseId) throws ValidationException {
-		
+			@QueryParam("courseId") int courseId) throws ValidationException, UserNotFoundException {
+		logger.info("Viewing Enrolled Students");
 		ArrayList<Student> students=new ArrayList<Student>();
+		ProfessorInterface professorInterface = ProfessorImplementation.getInstance();
 	
 		try{
-			students = professorImplementation.viewEnrolledStudents(profId, courseId);
-			ArrayList<ArrayList> ans = new ArrayList<ArrayList>();
-			for(Student student: students)
-			{
-				ArrayList tmp = new ArrayList();
-				tmp.add(student.getStudentId());
-				tmp.add(student.getName());
-				tmp.add(student.getContactNo());
-				ans.add(tmp);
-			}
-			return ans;
+			
+			students = professorInterface.viewEnrolledStudents(profId, courseId);
+			
 		}
 		catch(Exception e){
 			return null;
 		}
+		
+		return students;
 	}
 	
+	
 	/**
-	 * Assign Grades to a student
-	 */
+     * Method to assign grade
+     * @param StudentId
+	 *@param courseId
+	 *@param grade
+     * @return Response
+     * @throws SQLException , UserNotFoundException
+     */
 	@POST
-	@Path("/grades")
+	@Path("/assignGrade")
 	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response assignGrade(Grade grade) throws ValidationException, CourseNotFoundException, UserNotFoundException  {
-		
+	public Response assignGrade(
+			@NotNull
+			@QueryParam("studentId") int studentId,
+			
+			@NotNull
+			@QueryParam("courseId") int courseId,
+			
+			
+			@NotNull
+			@QueryParam("grade") float grade) throws ValidationException, CourseNotFoundException, UserNotFoundException  {
+		logger.info("Assigning grades");
+		ProfessorInterface professorInterface = ProfessorImplementation.getInstance();
 		try {
-			professorImplementation.assignGrade(grade.getStudentId(), grade.getCourseId(), grade.getGrade());
+			
+			professorInterface.assignGrade(studentId, courseId, grade);
+			return Response.status(200).entity("Grade added for student with studentId: "+studentId).build();
+		}
+		catch (CourseNotFoundException ex) {
+			return Response.status(400).entity(ex.getMessage()).build();
+			
 		}
 		catch(Exception e){
 			return Response.status(500).entity(e.getMessage()).build();
 		}
-		return Response.status(200).entity("Grade added for student with studentId: "+grade.getStudentId()).build();
+		
 	}
 	
 	/**
-	 * Selecting the Courses
-	 */
+     * Method to select Course 
+     * @param profId
+	 *@param courseId
+     * @return Response
+     * @throws SQLException , UserNotFoundException
+     */
+	
 	@POST
-	@Path("/courses")
-	@Consumes("application/json")
+	@Path("/selectCourse")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response selectCourses(Course course ) throws CourseNotFoundException {
+	public Response selectCourses(@NotNull @QueryParam("profId") int profId,
+			@NotNull @QueryParam("courseId") int courseId ) throws CourseNotFoundException {
+		logger.info("Selecting Courses");
+		ProfessorInterface professorInterface = ProfessorImplementation.getInstance();
 			try {
-				if(professorImplementation.selectCourse(course.getProfessorId(),course.getCourseId())) {
-					return Response.status(200).entity("Course has been succesfully allocated: ").build();
-				}
-				else {
-					
-					return Response.status(200).entity("Course has been already allocated: ").build();
-				}
+				professorInterface.selectCourse(profId,courseId); 
+				return Response.status(200).entity("Course has been succesfully allocated: ").build();
+				
+			}
+			catch(CourseNotFoundException ex) {
+				return Response.status(400).entity(ex.getMessage()).build();
 			}
 			catch(Exception e) {
 				 return Response.status(400).entity(e.getMessage()).build();
 
 			}
 			
+			
 		
 	}
+	
+	/**
+     * Professor Menu
+     */
+	 @GET
+	    @Path("/")
+	    @Produces(MediaType.APPLICATION_JSON)
+	    public Response welcomeToCRS() {
+		 logger.info("Welcome to CRS");
+	        return Response.status(Status.OK).entity("Welcome To Professor Menu").build();
+	    }
 
 	
 }

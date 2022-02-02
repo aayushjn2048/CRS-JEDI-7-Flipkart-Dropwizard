@@ -67,7 +67,7 @@ public class CRSStudentMenu {
 					System.out.print("Enter contact number: ");
 					String contaccNo = scanner.next();
 
-					studentImplementation.selectCourses(CRSApplication.getUserId());
+//					studentImplementation.selectCourses(CRSApplication.getUserId());			This file is not needed for REST API's 
 					break;
 				}
 				case 3:{

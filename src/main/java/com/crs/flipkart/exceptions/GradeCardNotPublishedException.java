@@ -13,4 +13,8 @@ public class GradeCardNotPublishedException extends Exception{
 	{
 		System.out.println("GradeCard is not published yet");
 	}
+	
+	public String getMessage() {
+		return "Grade card is not published yet !";
+	}
 }

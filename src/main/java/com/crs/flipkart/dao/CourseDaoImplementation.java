@@ -23,7 +23,7 @@ import com.crs.flipkart.utils.DBUtils;
 public class CourseDaoImplementation implements CourseDaoInterface{
 	private static Logger logger = Logger.getLogger(CourseDaoImplementation.class);
 	private static CourseDaoImplementation instance = null;
-    private Connection conn = DBUtils.getConnection();
+    private Connection conn = DBConnection.connectDB();
 
     private CourseDaoImplementation() {
     }

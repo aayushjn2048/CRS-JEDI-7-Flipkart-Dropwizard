@@ -12,7 +12,7 @@ import com.crs.flipkart.constants.Role;
  */
 public abstract class User {
 	
-		private int userId;
+		private int userId = -1;
 		private String username;
 		private String passwordHash;
 		private String name;
